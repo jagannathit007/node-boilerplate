@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const models = require("./../../models/zindex");
 const response = require("./../../utils/response");
-const validator = require("./../../validators/topicValidator");
+const validator =require("./../../validators/topic_validator")
 const asyncHandler = require("express-async-handler");
 
 
