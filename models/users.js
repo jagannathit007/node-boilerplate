@@ -1,14 +1,21 @@
-let mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
-let schema = new mongoose.Schema(
+const usersSchema = new mongoose.Schema(
   {
-    name: { type: String, default: "" },
-    emailId: { type: String, default: "" },
-    password: { type: String, default: "" },
-    profileImage: { type: String, default: "" },
+    name: String,
+    emailId: String,
+    password: String,
+    signupType: { type: String, enum: ['Google', 'Apple', 'Regular'], default: 'Regular' },
+    topics: [String],
+    profileImage: String,
+    isIntroPassed: { type: Boolean, default: false },
+    isVerified: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
+    isBlocked: { type: Boolean, default: false },
+    isDeleted: { type: Boolean, default: false },
+    lastOtp: String,
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("users", schema);
+module.exports = mongoose.model("Users", usersSchema);
