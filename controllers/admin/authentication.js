@@ -32,7 +32,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
 exports.loginAdmin = asyncHandler(async (req, res) => {
   const { emailId, password } = req.body;
 
-  const admin = await models.admin.findOne({ emailId }).lean();
+  let admin = await models.admin.findOne({ emailId }).lean();
   if (!admin) {
     return response.success("Invalid credentials!", null, res);
   }
@@ -42,7 +42,7 @@ exports.loginAdmin = asyncHandler(async (req, res) => {
     return response.success("Invalid credentials!", null, res);
   }
 
-  await models.admin.findByIdAndUpdate(admin._id, { lastLoginAt: new Date() });
+  admin = await models.admin.findByIdAndUpdate(admin._id, { lastLoginAt: new Date() }).select('-lastLoginAt -lastPasswordResetAt -password -createdAt -updatedAt -__v');
 
   const token = helpers.generateToken({ id: String(admin._id), role: "admin" });
 
