@@ -6,26 +6,30 @@ const response = require("./../../utils/response");
 
 
 exports.registerAdmin = asyncHandler(async (req, res) => {
-  const { name, emailId, password } = req.body;
+  const { _id, name, emailId, password } = req.body;
 
-  let existingAdmin = await models.admin.findOne({ emailId }).lean();
-  if (existingAdmin) {
-    return response.success("Admin already exists!", null, res);
+  if (_id != null && _id != '') {
+    await models.admin.findByIdAndUpdate(_id, { name, emailId }, { new: true });
+    return response.success("Admin updated successfully!", true, res);
+  } else {
+    let existingAdmin = await models.admin.findOne({ emailId }).lean();
+    if (existingAdmin) {
+      return response.success("Admin already exists!", null, res);
+    }
+
+    const encryptedPassword = encrypt(password);
+
+    const newAdmin = await models.admin.create({
+      name,
+      emailId,
+      password: encryptedPassword,
+      lastLoginAt: null,
+      lastPasswordResetAt: new Date(),
+    });
+
+    const token = helpers.generateToken({ id: String(newAdmin._id), role: "admin" });
+    return response.success("Admin registered successfully!", true, res);
   }
-
-  const encryptedPassword = encrypt(password);
-
-  const newAdmin = await models.admin.create({
-    name,
-    emailId,
-    password: encryptedPassword,
-    lastLoginAt: null,
-    lastPasswordResetAt: new Date(),
-  });
-
-  const token = helpers.generateToken({ id: String(newAdmin._id), role: "admin" });
-
-  return response.success("Admin registered successfully!", { token, admin: newAdmin }, res);
 });
 
 exports.getAdmins = asyncHandler(async (req, res) => {
@@ -39,6 +43,17 @@ exports.getAdmins = asyncHandler(async (req, res) => {
     ]
   }).lean();
   return response.success("Admin already exists!", admins, res);
+});
+
+exports.deleteAdmins = asyncHandler(async (req, res) => {
+  const { adminId } = req.body;
+  let adminCount = await models.admin.countDocuments();
+  if (adminCount == 1) {
+    return response.success("Cannot delete! There is only one admin left.", null, res);
+  } else {
+    await models.admin.findByIdAndDelete(adminId, { new: true });
+    return response.success("Admin deleted success fully!", true, res);
+  }
 });
 
 
