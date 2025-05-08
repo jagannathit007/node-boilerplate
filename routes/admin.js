@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+const { authenticateAdminToken } = require('./../middlewares/authenticator');
+
 //Controllers
 let authCtrl = require("./../controllers/admin/authentication");
 let subscriptionsMasterCtrl = require("./../controllers/admin/subscriptions_master");
@@ -10,7 +12,10 @@ let topicsMasterCtrl = require("./../controllers/admin/topics_master");
 router.post("/loginAdmin", authCtrl.loginAdmin);
 
 // localhost:3100/admin/registerAdmin
-router.post("/registerAdmin", authCtrl.registerAdmin);
+router.post("/saveAdmin", authCtrl.registerAdmin);
+
+router.post("/getAdmins", authenticateAdminToken, authCtrl.getAdmins);
+router.post("/deleteAdmin", authenticateAdminToken, authCtrl.deleteAdmins);
 
 // localhost:3100/admin/saveSubscription
 router.post("/saveSubscription", subscriptionsMasterCtrl.saveSubscription);
