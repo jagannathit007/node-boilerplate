@@ -18,6 +18,9 @@ router.post("/signUp", authCtrl.signUp);
 // localhost:3100/mobile/userById
 router.post("/userById", authenticateMobileToken, authCtrl.getUserById);
 
+// localhost:3100/mobile/updateUser
+router.post("/updateUser", authenticateMobileToken, authCtrl.updateUser);
+
 // localhost:3100/mobile/userById
 router.post(
   "/updateProfileImage",
