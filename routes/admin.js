@@ -18,21 +18,21 @@ router.post("/getAdmins", authenticateAdminToken, authCtrl.getAdmins);
 router.post("/deleteAdmin", authenticateAdminToken, authCtrl.deleteAdmins);
 
 // localhost:3100/admin/saveSubscription
-router.post("/saveSubscription", subscriptionsMasterCtrl.saveSubscription);
+router.post("/saveSubscription", authenticateAdminToken, subscriptionsMasterCtrl.saveSubscription);
 
 // localhost:3100/admin/getSubscriptionList
-router.post("/getSubscriptionList", subscriptionsMasterCtrl.getSubscriptionList);
+router.post("/getSubscriptionList", authenticateAdminToken, subscriptionsMasterCtrl.getSubscriptionList);
 
 // localhost:3100/admin/deleteSubscription
-router.post("/deleteSubscription", subscriptionsMasterCtrl.deleteSubscription);
+router.post("/deleteSubscription", authenticateAdminToken, subscriptionsMasterCtrl.deleteSubscription);
 
 // localhost:3100/admin/saveTopic
-router.post("/saveTopic", topicsMasterCtrl.saveTopic);
+router.post("/saveTopic", authenticateAdminToken, topicsMasterCtrl.saveTopic);
 
 // localhost:3100/admin/getTopicList
-router.post("/getTopicList", topicsMasterCtrl.getTopicList);
+router.post("/getTopicList", authenticateAdminToken, topicsMasterCtrl.getTopicList);
 
 // localhost:3100/admin/deleteTopic
-router.post("/deleteTopic", topicsMasterCtrl.deleteTopic);
+router.post("/deleteTopic", authenticateAdminToken, topicsMasterCtrl.deleteTopic);
 
 module.exports = router;

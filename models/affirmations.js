@@ -3,13 +3,13 @@ const mongoose = require("mongoose");
 const affirmationsSchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "Users" },
-    description: String,
+    description: { type: String, default: null },
     time: [
       {
-        index: String,
-        time: String,
+        index: { type: Number },
+        time: { type: String },
       }
-    ], 
+    ],
   },
   { timestamps: true }
 );

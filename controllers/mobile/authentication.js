@@ -6,7 +6,7 @@ const models = require("./../../models/zindex");
 const validator = require("./../../validators/user_validator");
 
 exports.signIn = asyncHandler(async (req, res) => {
-  const { emailId, password, signupType} = req.body;
+  const { emailId, password, socialId, signupType } = req.body;
 
   let user;
   let searchQuery = { emailId };
@@ -17,7 +17,7 @@ exports.signIn = asyncHandler(async (req, res) => {
   }
 
   if (user.isBlocked) {
-    return response.success("Account is blocked!",null, res);
+    return response.success("Account is blocked!", null, res);
   }
 
   if (signupType === 'Regular') {
@@ -25,19 +25,22 @@ exports.signIn = asyncHandler(async (req, res) => {
     if (decrypted !== password) {
       return response.success("Invalid credentials!", null, res);
     }
+  } else if (["Apple", "Google"].includes(signupType)) {
+    if (socialId != user.socialId) {
+      return response.success("Invalid credentials!", null, res);
+    }
   } else {
-    return response.success("Unsupported signupType!",null, res);
+    return response.success("Invalid Login type found", null, res);
   }
 
   const token = helpers.generateToken({ id: String(user._id) });
-
   return response.success("User login successfully!", token, res);
 });
 
 exports.signUp = asyncHandler(async (req, res) => {
   const { error, value } = validator.saveUser.validate(req.body);
   if (error) {
-    return response.success(error.details[0].message, null,res);
+    return response.success(error.details[0].message, null, res);
   }
 
   const {
@@ -45,13 +48,13 @@ exports.signUp = asyncHandler(async (req, res) => {
     emailId,
     password,
     signupType,
-    googleId,
+    socialId,
   } = value;
 
   let searchQuery = { emailId };
 
-  if (signupType === 'Google' || 'Apple' && googleId) {
-    searchQuery = { $or: [{ googleId }, { emailId }] };
+  if (signupType === 'Google' || 'Apple' && socialId) {
+    searchQuery = { $or: [{ socialId }, { emailId }] }
   }
 
   const user = await models.users.findOne(searchQuery).lean();
@@ -64,16 +67,12 @@ exports.signUp = asyncHandler(async (req, res) => {
     name,
     emailId,
     signupType,
-    googleId,
+    socialId,
     isVerified: signupType !== 'Regular',
   };
 
-  if (signupType === 'Google'|| 'Apple' && googleId) {
-    newUserData.googleId = googleId;
-  } else if (signupType === 'Regular' && password) {
+   if (signupType === 'Regular' && password) {
     newUserData.password = encrypt(password);
-  } else {
-    return response.success(`Missing required identifier for signupType: ${signupType}`, null,res);
   }
 
   const result = await models.users.create(newUserData);
@@ -94,8 +93,7 @@ exports.getUserById = asyncHandler(async (req, res) => {
 
 
 exports.updateUser = asyncHandler(async (req, res) => {
-  const userId = req.token.id; // fetched from auth middleware
-
+  const userId = req.token.id; 
   if (!userId) {
     return response.success("Unauthorized!", null, res);
   }
@@ -125,14 +123,13 @@ exports.updateUser = asyncHandler(async (req, res) => {
   ).select("-password -createdAt -updatedAt").lean();
 
   if (!updatedUser) {
-    return response.success("User not found!",null, res);
+    return response.success("User not found!", null, res);
   }
 
   return response.success("User updated successfully!", updatedUser, res);
 });
 
 exports.updateProfileImage = asyncHandler(async (req, res) => {
-  //Fetched req.token.id from middleware.
   const id = req.token.id;
   if (req.file != null) {
     await models.users.findByIdAndUpdate(

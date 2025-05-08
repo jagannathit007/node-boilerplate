@@ -5,7 +5,7 @@ const usersSchema = new mongoose.Schema(
     name: String,
     emailId: String,
     password: String,
-    googleId: String,
+    socialId: String,
     signupType: { type: String, enum: ['Google', 'Apple', 'Regular'], default: 'Regular' },
     topics: [String],
     profileImage: String,
