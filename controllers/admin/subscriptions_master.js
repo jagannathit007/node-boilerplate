@@ -30,7 +30,7 @@ exports.saveSubscription = asyncHandler(async (req, res) => {
       id,
       { duration, amount, description, features },
       { new: true }
-    );
+    ).select('-__v');
 
     if (!updated) return response.notFound(res);
 
@@ -62,7 +62,7 @@ exports.deleteSubscription = asyncHandler(async (req, res) => {
 
 exports.getSubscriptionList = asyncHandler(async (req, res) => {
   try {
-    let list = await models.subscriptions_master.find();
+    let list = await models.subscriptions_master.find().select('-__v');
     return response.success("Fetched subscription list successfully.", list, res);
   } catch (err) {
     return response.serverError(err, res);

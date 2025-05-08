@@ -6,6 +6,6 @@ const saveTopic = Joi.object({
   colorCode: Joi.string().trim().optional().allow(""),
   background: Joi.string().trim().optional().allow(""),
   isActive: Joi.boolean().optional(),
-});
+}).unknown(true);
 
 module.exports = {saveTopic};

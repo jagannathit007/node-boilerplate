@@ -5,7 +5,7 @@ const subscriptionsMasterSchema = new mongoose.Schema(
       duration: String,
       amount: Number,
       description: String,
-      features: Object,
+      features: Array,
       isActive: { type: Boolean, default: true },
     },
     { timestamps: true }
