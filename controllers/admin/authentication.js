@@ -28,6 +28,19 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
   return response.success("Admin registered successfully!", { token, admin: newAdmin }, res);
 });
 
+exports.getAdmins = asyncHandler(async (req, res) => {
+  const { search } = req.body;
+
+  let searchRegex = new RegExp(search, "i");
+  let admins = await models.admin.find({
+    $or: [
+      { emailId: searchRegex },
+      { name: searchRegex }
+    ]
+  }).lean();
+  return response.success("Admin already exists!", admins, res);
+});
+
 
 exports.loginAdmin = asyncHandler(async (req, res) => {
   const { emailId, password } = req.body;

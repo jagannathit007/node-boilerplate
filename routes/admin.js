@@ -12,6 +12,8 @@ router.post("/loginAdmin", authCtrl.loginAdmin);
 // localhost:3100/admin/registerAdmin
 router.post("/registerAdmin", authCtrl.registerAdmin);
 
+router.post("/getAdmins", authCtrl.getAdmins);
+
 // localhost:3100/admin/saveSubscription
 router.post("/saveSubscription", subscriptionsMasterCtrl.saveSubscription);
 
