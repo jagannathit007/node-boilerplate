@@ -2,34 +2,29 @@ const express = require("express");
 const router = express.Router();
 const constants = require("./../config/constants");
 
-//Middlewares
+//MIDDLEWARE
 const { authenticateMobileToken } = require("./../middlewares/authenticator");
 const fileUploader = require("./../middlewares/fileUploader");
 
-//Controllers
-let authCtrl = require("./../controllers/mobile/authentication");
-let topicCtrl = require("./../controllers/mobile/topics");
+//CONTROLLERS
+const authCtrl = require("./../controllers/mobile/authentication");
+const topicCtrl = require("./../controllers/mobile/topics");
+const affirmationCtrl = require('./../controllers/mobile/affirmations');
 
-// localhost:3100/mobile/signIn
+//AUTHENTICATION AND PROFILE MODULE
 router.post("/signIn", authCtrl.signIn);
-
-// localhost:3100/mobile/signUp
 router.post("/signUp", authCtrl.signUp);
-
-// localhost:3100/mobile/userById
 router.post("/userById", authenticateMobileToken, authCtrl.getUserById);
-
-// localhost:3100/mobile/updateUser
 router.post("/updateUser", authenticateMobileToken, authCtrl.updateUser);
+let profileUpload = fileUploader(constants.UPLOADS.PROFILES).single("file");
+router.post("/updateProfileImage", authenticateMobileToken, profileUpload, authCtrl.updateProfileImage);
 
-router.post("/getTopics", authenticateMobileToken, topicCtrl.getTopics)
+//TOPICS MODULE
+router.post("/getTopics", authenticateMobileToken, topicCtrl.getTopics);
 
-// localhost:3100/mobile/userById
-router.post(
-  "/updateProfileImage",
-  authenticateMobileToken,
-  fileUploader(constants.UPLOADS.PROFILES).single("file"),
-  authCtrl.updateProfileImage
-);
+//AFFIRMATION MODULE
+router.post("/getAffirmations", authenticateMobileToken, affirmationCtrl.getAffirmations);
+router.post("/saveAffirmation", authenticateMobileToken, affirmationCtrl.saveAffirmation);
+router.post("/deleteAffirmation", authenticateMobileToken, affirmationCtrl.deleteAffirmation);
 
 module.exports = router;
