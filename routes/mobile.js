@@ -15,7 +15,7 @@ const affirmationCtrl = require('./../controllers/mobile/affirmations');
 router.post("/signIn", authCtrl.signIn);
 router.post("/signUp", authCtrl.signUp);
 router.post("/getProfile", authenticateMobileToken, authCtrl.getProfile);
-router.post("/updateProfile", authenticateMobileToken, authCtrl.updateUser);
+router.post("/updateProfile", authenticateMobileToken, authCtrl.updateProfile);
 let profileUpload = fileUploader(constants.UPLOADS.PROFILES).single("file");
 router.post("/updateProfileImage", authenticateMobileToken, profileUpload, authCtrl.updateProfileImage);
 

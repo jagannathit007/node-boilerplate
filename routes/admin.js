@@ -12,6 +12,8 @@ let topicsMasterCtrl = require("./../controllers/admin/topics_master");
 
 //AUTHENTICATION MODULE
 router.post("/loginAdmin", authCtrl.loginAdmin);
+router.post("/updateProfile", authenticateAdminToken, authCtrl.updateProfile);
+router.post("/changePassword", authenticateAdminToken, authCtrl.changePassword);
 
 //ADMIN MODULE
 router.post("/saveAdmin", authCtrl.registerAdmin);
