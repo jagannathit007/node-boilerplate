@@ -8,6 +8,7 @@ const fileUploader = require("./../middlewares/fileUploader");
 
 //Controllers
 let authCtrl = require("./../controllers/mobile/authentication");
+let topicCtrl = require("./../controllers/mobile/topics");
 
 // localhost:3100/mobile/signIn
 router.post("/signIn", authCtrl.signIn);
@@ -20,6 +21,8 @@ router.post("/userById", authenticateMobileToken, authCtrl.getUserById);
 
 // localhost:3100/mobile/updateUser
 router.post("/updateUser", authenticateMobileToken, authCtrl.updateUser);
+
+router.post("/getTopics", authenticateMobileToken, topicCtrl.getTopics)
 
 // localhost:3100/mobile/userById
 router.post(
