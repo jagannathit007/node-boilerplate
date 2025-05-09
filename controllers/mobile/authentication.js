@@ -81,7 +81,7 @@ exports.signUp = asyncHandler(async (req, res) => {
   return response.success("Account created successfully!", token, res);
 });
 
-exports.getUserById = asyncHandler(async (req, res) => {
+exports.getProfile = asyncHandler(async (req, res) => {
   //Fetched req.token.id from middleware.
   const id = req.token.id;
   let user = await models.users
@@ -92,7 +92,7 @@ exports.getUserById = asyncHandler(async (req, res) => {
 });
 
 
-exports.updateUser = asyncHandler(async (req, res) => {
+exports.updateProfile = asyncHandler(async (req, res) => {
   const userId = req.token.id; 
   if (!userId) {
     return response.success("Unauthorized!", null, res);
