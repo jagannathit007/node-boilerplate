@@ -1,5 +1,6 @@
 module.exports = {
     UPLOADS: {
-        PROFILES: 'profiles'
+        PROFILES: 'profiles',
+        TOPICS: 'topics',
     }
 }

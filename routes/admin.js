@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
+const constants = require('./../config/constants');
 const { authenticateAdminToken } = require('./../middlewares/authenticator');
+const uploader = require('./../middlewares/fileUploader');
 
 //Controllers
 let authCtrl = require("./../controllers/admin/authentication");
@@ -27,10 +29,10 @@ router.post("/getSubscriptionList", authenticateAdminToken, subscriptionsMasterC
 router.post("/deleteSubscription", authenticateAdminToken, subscriptionsMasterCtrl.deleteSubscription);
 
 // localhost:3100/admin/saveTopic
-router.post("/saveTopic", authenticateAdminToken, topicsMasterCtrl.saveTopic);
+router.post("/saveTopic", authenticateAdminToken, uploader(constants.UPLOADS.TOPICS).single('image'), topicsMasterCtrl.saveTopic);
 
 // localhost:3100/admin/getTopicList
-router.post("/getTopicList", authenticateAdminToken, topicsMasterCtrl.getTopicList);
+router.post("/getTopics", authenticateAdminToken,  topicsMasterCtrl.getTopicList);
 
 // localhost:3100/admin/deleteTopic
 router.post("/deleteTopic", authenticateAdminToken, topicsMasterCtrl.deleteTopic);

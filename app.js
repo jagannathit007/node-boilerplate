@@ -24,12 +24,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-//Allow public users to access the uploads folder publically.
-app.use("uploads", express.static(path.join(__dirname, "uploads")));
 
 //Register API Routes
 require("./routes/zindex").forEach((e) => app.use(e.path, e.file));
 
+//Allow public users to access the uploads folder publically.
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 //Error handler for APIs
 app.use((err, req, res, next) => {
   const statusCode =

@@ -4,7 +4,7 @@ const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 
 const createUploadMiddleware = (folderName) => {
-  const uploadPath = path.join(__dirname, "uploads", folderName);
+  const uploadPath = path.join("uploads", folderName);
 
   // Create folder if it doesn't exist
   if (!fs.existsSync(uploadPath)) {

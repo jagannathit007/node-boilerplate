@@ -2,10 +2,9 @@ const mongoose = require("mongoose");
 
 const topicsMasterSchema = new mongoose.Schema(
     {
-      title: String,
-      image: String,
-      colorCode: String,
-      background: String,
+      title: {type: String, default: ''},
+      image: {type: String, default: ''},
+      colorCode: {type: String, default: ''},
       isActive: { type: Boolean, default: true },
     },
     { timestamps: true }
