@@ -44,8 +44,10 @@ exports.deleteAffirmation = asyncHandler(async (req, res) => {
 
 exports.getAffirmations = asyncHandler(async (req, res) => {
   try {
+    const { search } = req.body;
     const userId = req.token.id;
-    const list = await models.affirmations.find({ userId }).select("-__v");
+    let searchRegex = new RegExp(search, "i");
+    const list = await models.affirmations.find({ userId, $or: [{ description: searchRegex }] }).select("-__v");
     return response.success("Fetched affirmations successfully.", list, res);
   } catch (err) {
     return response.serverError(err, res);
