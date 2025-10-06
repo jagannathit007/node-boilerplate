@@ -1,47 +1,114 @@
+const ApiError = require("./apiError.js");
+
 const codes = {
   success: 200,
   resourceNotAvailable: 404,
   forbidden: 403,
-  unAuthrorized: 401,
+  unAuthrorized: 401,   
+  noContent: 204,
   internalServerError: 500,
+  requiredField: 400,
+  conflict: 409,
+  created: 201,
+  badRequest: 400,
 };
 
-exports.success = (message, data, response) => {
+const success = (message, data, response) => {
   return response.status(codes.success).json({
+    success: true,
     message: message || "Executed successfully!",
     data: data,
     status: codes.success,
   });
 };
 
-exports.notFound = (response) => {
-  return response.status(codes.resourceNotAvailable).json({
-    message: "Resource not found!",
-    data: null,
-    status: codes.resourceNotAvailable,
+const badRequest = (data, response) => {
+  return response.status(codes.badRequest).json({
+    message: "Bad Request!",
+    data: data,
+    status: codes.badRequest,
   });
 };
 
-exports.forbidden = (message, response) => {
-  return response.status(codes.forbidden).json({
-    message: message || "Access forbidden!",
-    data: null,
-    status: codes.forbidden,
+const create = (message, data, response) => {
+  return response.status(codes.created).json({
+    success: true,
+    message: message || "Created successfully!",
+    data: data,
+    status: codes.created,
   });
 };
 
-exports.unauthorized = (response) => {
-  return response.status(codes.unAuthrorized).json({
-    message: "Unauthorized access!",
+const noContent = (message, response) => {
+  return response.status(codes.noContent).json({
+    message: message || "No Data found",
     data: null,
-    status: codes.unAuthrorized,
+    status: codes.success,
   });
 };
 
-exports.serverError = (error, response) => {
-  return response.status(codes.internalServerError).json({
-    message: error.message || "Internal server error!",
-    data: null,
-    status: codes.internalServerError,
+const conflict = (message, response) => {
+  const err = new ApiError(codes.conflict, message || "already exist");
+  return response.status(err.statusCode).json({
+    message: err.message,
+    data: err.data,
+    status: err.statusCode,
   });
+};
+
+const requiredField = (message, response) => {
+  const err = new ApiError(codes.requiredField, message || "field are required");
+  return response.status(err.statusCode).json({
+    message: err.message,
+    data: err.data,
+    status: err.statusCode,
+  });
+};
+
+const notFound = (message, response) => {
+  const err = new ApiError(codes.resourceNotAvailable, message || "Resource Not Available!");
+  return response.status(err.statusCode).json({
+    message: err.message,
+    data: err.data,
+    status: err.statusCode,
+  });
+};
+
+const forbidden = (message, response) => {
+  const err = new ApiError(codes.forbidden, message || "Access forbidden!");
+  return response.status(err.statusCode).json({
+    message: err.message,
+    data: err.data,
+    status: err.statusCode,
+  });
+};
+
+const unauthorized = (message, response) => {
+  const err = new ApiError(codes.unAuthrorized, message || "UnAuthorized user!");
+  return response.status(err.statusCode).json({
+    message: err.message,
+    data: err.data,
+    status: err.statusCode,
+  });
+};
+
+const serverError = (err, response) => {
+  return response.status(500).json({
+    message: err.message,
+    data: err.data,
+    status: err.statusCode,
+  });
+};
+
+module.exports = {
+  success,
+  noContent,
+  notFound,
+  forbidden,
+  unauthorized,
+  serverError,
+  conflict,
+  requiredField,
+  create,
+  badRequest
 };
